@@ -1,52 +1,310 @@
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#173d35">
 <title>حاسبة الريال إلى الدينار</title>
 <style>
-:root{color-scheme:light;--green:#173d35;--muted:#64736d;--line:#dce5df;--bg:#f3f7f4}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;color:#172b25;min-height:100vh;display:grid;place-items:center;padding:18px}
-main{width:min(100%,460px);background:white;border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 12px 35px #173d3510}
-.brand{font-size:13px;color:var(--muted);margin-bottom:8px}h1{font-size:24px;margin:0 0 8px}p{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 22px}
-label{display:block;font-weight:650;font-size:14px;margin:16px 0 8px}
-input{width:100%;padding:14px;border:1px solid #cbd8d0;border-radius:12px;font:inherit;font-size:17px;outline:none}
-input:focus{border-color:var(--green);box-shadow:0 0 0 3px #173d3512}
-.result{margin-top:20px;background:var(--green);color:white;border-radius:17px;padding:20px}
-.result small{opacity:.8;display:block;margin-bottom:8px}.amount{font-size:32px;font-weight:750;overflow-wrap:anywhere}.sub{font-size:13px;opacity:.8;margin-top:8px}
-.actions{display:flex;gap:10px;margin-top:14px}button{flex:1;border:1px solid var(--line);background:white;border-radius:12px;padding:12px;font:inherit;font-weight:650;color:var(--green);cursor:pointer}button.primary{background:#e8f0eb;border-color:#e8f0eb}
-.note{font-size:12px;color:var(--muted);line-height:1.7;margin-top:18px}
+:root {
+  --green: #173d35;
+  --muted: #65766f;
+  --line: #dce6df;
+  --bg: #f2f6f3;
+}
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Tahoma, Arial, sans-serif;
+  color: #172b25;
+  padding: 22px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main {
+  width: 100%;
+  max-width: 460px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 12px 35px #173d3510;
+}
+
+.brand {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+h1 {
+  font-size: 24px;
+  line-height: 1.5;
+  margin: 0 0 8px;
+}
+
+p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0 0 22px;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  margin: 17px 0 8px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  min-height: 52px;
+  border: 1px solid #cbd8d0;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 18px;
+  direction: ltr;
+  text-align: left;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px #173d3512;
+}
+
+.result {
+  margin-top: 22px;
+  background: var(--green);
+  color: white;
+  border-radius: 17px;
+  padding: 20px;
+}
+
+.result small {
+  opacity: .85;
+  display: block;
+  margin-bottom: 9px;
+}
+
+.amount {
+  font-size: 32px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.rate {
+  font-size: 13px;
+  opacity: .85;
+  margin-top: 9px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+button {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--green);
+  cursor: pointer;
+}
+
+button.primary {
+  background: #e8f0eb;
+  border-color: #e8f0eb;
+}
+
+.status {
+  font-size: 12px;
+  color: var(--green);
+  text-align: center;
+  margin-top: 10px;
+  min-height: 18px;
+}
+
+.note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.9;
+  margin-top: 18px;
+  border-top: 1px solid #edf1ee;
+  padding-top: 14px;
+}
+
+@media (max-width: 360px) {
+  main { padding: 19px; }
+  h1 { font-size: 22px; }
+  .amount { font-size: 28px; }
+}
 </style>
 </head>
+
 <body>
 <main>
-  <div class="brand">أداة تحويل العملات</div>
+  <div class="brand">↔ أداة تحويل العملات</div>
+
   <h1>من الريال السعودي إلى الدينار الليبي</h1>
-  <p>غيّر سعر الدولار حسب سعر الصرف اللي تعتمد عليه، والحاسبة تحدّث النتيجة تلقائيًا.</p>
+  <p>غيّر سعر السلعة أو سعر الدولار، وستتحدث النتيجة تلقائيًا.</p>
+
   <label for="sar">سعر السلعة بالريال السعودي (ر.س)</label>
-  <input id="sar" type="number" min="0" step="any" value="100" inputmode="decimal">
+  <input id="sar" type="number" min="0" step="any"
+         value="100" inputmode="decimal">
+
   <label for="usd">سعر الدولار بالدينار الليبي (د.ل)</label>
-  <input id="usd" type="number" min="0.0001" step="any" value="10.25" inputmode="decimal">
-  <div class="result" aria-live="polite">
+  <input id="usd" type="number" min="0.0001" step="any"
+         value="10.25" inputmode="decimal">
+
+  <section class="result" aria-live="polite">
     <small>السعر التقريبي بالدينار الليبي</small>
     <div class="amount" id="result">273.33 د.ل</div>
-    <div class="sub" id="rate">1 ريال = 2.7333 د.ل</div>
-  </div>
+    <div class="rate" id="rate">1 ريال = 2.7333 د.ل</div>
+  </section>
+
   <div class="actions">
-    <button class="primary" id="copy">نسخ النتيجة</button>
-    <button id="reset">إعادة ضبط</button>
+    <button class="primary" id="copy" type="button">
+      نسخ النتيجة
+    </button>
+    <button id="reset" type="button">
+      إعادة ضبط
+    </button>
   </div>
-  <div class="note">طريقة الحساب: سعر الريال = سعر الدولار بالدينار ÷ 3.75. لا تشمل النتيجة الشحن أو العمولة أو أي مصاريف إضافية. سعر الصرف المُدخل يدوي وليس تحديثًا مباشرًا للسوق.</div>
+
+  <div class="status" id="status" role="status"></div>
+
+  <div class="note">
+    <strong>طريقة الحساب:</strong>
+    سعر الريال = سعر الدولار بالدينار ÷ 3.75.
+    <br>
+    لا تشمل النتيجة الشحن أو العمولة أو المصاريف الإضافية.
+    سعر الصرف المُدخل يدوي، وليس تحديثًا مباشرًا للسوق.
+  </div>
 </main>
+
 <script>
-const sar=document.getElementById('sar'),usd=document.getElementById('usd'),result=document.getElementById('result'),rate=document.getElementById('rate');
-const fmt=n=>n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-function calc(){const a=Number(sar.value),d=Number(usd.value);if(sar.value.trim()===''||usd.value.trim()===''||a<0||d<=0){result.textContent='—';rate.textContent='أدخل قيمًا صحيحة';return}const r=d/3.75;result.textContent=fmt(a*r)+' د.ل';rate.textContent='1 ريال = '+r.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:4})+' د.ل'}
-sar.addEventListener('input',calc);usd.addEventListener('input',calc);
-document.getElementById('reset').addEventListener('click',()=>{sar.value='100';usd.value='10.25';calc()});
-document.getElementById('copy').addEventListener('click',async()=>{const text='السعر: '+result.textContent+'\nسعر الدولار: '+usd.value+' د.ل\nالحساب على أساس الدولار = 3.75 ريال';const b=document.getElementById('copy');try{await navigator.clipboard.writeText(text);b.textContent='تم النسخ ✓';setTimeout(()=>b.textContent='نسخ النتيجة',1600)}catch(e){b.textContent='تعذّر النسخ';setTimeout(()=>b.textContent='نسخ النتيجة',1600)}});
-calc();
+(() => {
+  "use strict";
+
+  const sar = document.getElementById("sar");
+  const usd = document.getElementById("usd");
+  const result = document.getElementById("result");
+  const rate = document.getElementById("rate");
+  const status = document.getElementById("status");
+
+  function fmt(n) {
+    return n.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function calc() {
+    status.textContent = "";
+
+    if (sar.value.trim() === "" || usd.value.trim() === "") {
+      result.textContent = "—";
+      rate.textContent = "أدخل القيم المطلوبة";
+      return null;
+    }
+
+    const amount = Number(sar.value);
+    const dollarRate = Number(usd.value);
+
+    if (
+      !Number.isFinite(amount) ||
+      !Number.isFinite(dollarRate) ||
+      amount < 0 ||
+      dollarRate <= 0
+    ) {
+      result.textContent = "—";
+      rate.textContent = "تحقق من القيم المدخلة";
+      return null;
+    }
+
+    const sarToLYD = dollarRate / 3.75;
+    const total = amount * sarToLYD;
+
+    result.textContent = fmt(total) + " د.ل";
+    rate.textContent =
+      "1 ريال = " +
+      sarToLYD.toLocaleString("en-US", {
+        minimumFractionDigits: 4,
+        maximumFractionDigits: 4
+      }) +
+      " د.ل";
+
+    return { total, sarToLYD, amount, dollarRate };
+  }
+
+  sar.addEventListener("input", calc);
+  usd.addEventListener("input", calc);
+
+  document.getElementById("reset").addEventListener("click", () => {
+    sar.value = "100";
+    usd.value = "10.25";
+    calc();
+    status.textContent = "تمت إعادة الضبط";
+  });
+
+  document.getElementById("copy").addEventListener("click", async () => {
+    const data = calc();
+
+    if (!data) {
+      status.textContent = "أدخل قيمًا صحيحة أولًا";
+      return;
+    }
+
+    const text =
+      "السعر: " + fmt(data.total) + " د.ل\n" +
+      "سعر السلعة: " + data.amount + " ريال سعودي\n" +
+      "سعر الدولار: " + data.dollarRate + " د.ل\n" +
+      "سعر الريال الواحد: " +
+      data.sarToLYD.toFixed(4) + " د.ل\n" +
+      "الحساب على أساس 1 دولار = 3.75 ريال";
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+
+        const copied = document.execCommand("copy");
+        area.remove();
+
+        if (!copied) throw new Error("Copy failed");
+      }
+
+      status.textContent = "تم نسخ النتيجة ✓";
+    } catch (_) {
+      status.textContent = "تعذّر النسخ؛ حاول نسخ النتيجة يدويًا";
+    }
+  });
+
+  calc();
+})();
 </script>
 </body>
 </html>
