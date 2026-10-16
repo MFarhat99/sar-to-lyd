@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#153d33">
+<meta name="description" content="حاسبة بسيطة لتحويل الريال السعودي والدينار الليبي مع حفظ سعر الصرف وسجل التحويلات.">
+<title>حاسبة الريال والدينار</title>
+<style>
+:root{color-scheme:light;--green:#153d33;--green2:#27614f;--ink:#172720;--muted:#6c7b73;--line:#dce7df;--paper:#fff;--bg:#f1f6f2;--soft:#eaf3ed;--shadow:0 12px 34px #153d3310}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#e4f0e8 0,transparent 340px),var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;color:var(--ink);line-height:1.55}
+button,input,select{font:inherit}
+main{width:min(100% - 24px,600px);margin:0 auto;padding:18px 0 32px}
+.hero{position:relative;overflow:hidden;padding:24px 21px 20px;background:linear-gradient(140deg,var(--green),var(--green2));color:white;border-radius:26px;box-shadow:var(--shadow)}
+.hero:after{content:"↔";position:absolute;left:15px;top:6px;font-size:78px;line-height:1;color:#ffffff12;font-weight:900}
+.eyebrow{font-size:12px;opacity:.8;font-weight:700}
+h1{font-size:25px;line-height:1.35;margin:7px 0}
+.hero p{font-size:13px;margin:0;opacity:.85}
+.gift{position:relative;margin-top:18px;border:1px solid #ffffff4a;background:#ffffff12;border-radius:15px;padding:11px 13px;text-align:center;font-size:14px;font-weight:800}
+.card{margin-top:14px;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:21px;box-shadow:var(--shadow)}
+h2{font-size:16px;margin:0 0 14px}
+label{display:block;font-size:13px;font-weight:750;color:var(--muted);margin:0 0 7px}
+.field{margin-bottom:14px}
+input,select{display:block;width:100%;min-width:0;min-height:50px;border:1px solid #cad8ce;background:#fff;color:var(--ink);border-radius:13px;padding:12px 13px;outline:none}
+input{direction:ltr;text-align:left;font-size:18px;font-variant-numeric:tabular-nums}
+input:focus,select:focus{border-color:var(--green2);box-shadow:0 0 0 3px #27614f18}
+.helper{font-size:12px;color:var(--muted);margin-top:6px}
+.switchline{display:flex;gap:9px;align-items:center}
+.switchline select{flex:1}
+.iconbtn{flex:0 0 50px;width:50px;height:50px;padding:0;background:var(--soft);color:var(--green);font-size:23px;border:1px solid var(--line)}
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+button{border:0;border-radius:13px;padding:11px 14px;font-weight:800;cursor:pointer;touch-action:manipulation;transition:transform .08s}
+button:active{transform:scale(.98)}
+.quick button{background:#f5f8f5;border:1px solid var(--line);color:var(--green);padding:8px 14px;border-radius:999px;font-size:13px}
+.resultbox{padding:18px;background:linear-gradient(145deg,#eaf4ed,#f5faf6);border:1px solid #d7e8dc;border-radius:18px}
+.resultcaption{font-size:13px;color:var(--muted)}
+.result{font-size:clamp(29px,8vw,39px);line-height:1.25;font-weight:900;color:var(--green);letter-spacing:-.5px;overflow-wrap:anywhere;margin:6px 0;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.rate{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+.meta div{background:#f7faf7;border:1px solid #edf2ee;border-radius:13px;padding:10px 11px;min-width:0}
+.meta span{display:block;color:var(--muted);font-size:11px}
+.meta strong{display:block;font-size:14px;overflow-wrap:anywhere;margin-top:2px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.primary{background:var(--green);color:white}
+.secondary{background:var(--soft);color:var(--green)}
+.neutral{background:#f3f5f3;color:var(--ink)}
+.danger{background:#fff0ef;color:#9b3430}
+.actions button{min-height:46px;font-size:13px}
+.status{min-height:18px;color:var(--green2);font-size:12px;margin-top:8px}
+.history-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.history-head h2{margin:0 0 12px}
+.count{font-size:11px;background:var(--soft);color:var(--green);padding:4px 8px;border-radius:999px;margin-bottom:12px}
+.history-item{padding:13px 0;border-top:1px solid var(--line)}
+.history-item:first-child{border-top:0}
+.hrow{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.hrow strong{font-size:14px;overflow-wrap:anywhere}
+.hdate{font-size:11px;color:var(--muted);margin-top:3px}
+.hactions{display:flex;gap:7px;margin-top:8px}
+.hactions button{font-size:11px;padding:7px 10px}
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:12px 0}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:16px 12px 0}
+@media(max-width:360px){main{width:calc(100% - 18px)}.card{padding:14px}.hero{padding:20px 17px}.actions{grid-template-columns:1fr}.result{font-size:28px}}
+</style>
+</head>
+<body>
+<main>
+<header class="hero">
+  <div class="eyebrow">أداة تحويل العملات</div>
+  <h1>حاسبة الريال والدينار</h1>
+  <p>تحويل سريع وواضح، بسعر الصرف اللي تحدده أنت.</p>
+  <div class="gift">عمرة مقبولة هدية من محمد فرحات</div>
+</header>
+
+<section class="card">
+  <h2>سعر الصرف والتحويل</h2>
+  <div class="field">
+    <label for="usdRate">سعر الدولار بالدينار الليبي</label>
+    <input id="usdRate" type="text" inputmode="decimal" autocomplete="off" value="10.25" placeholder="مثال: 10,25">
+    <div class="helper">كل 1 دولار = 3.75 ريال سعودي. السعر يدوي وليس تحديثًا مباشرًا للسوق.</div>
+  </div>
+  <div class="field">
+    <label for="direction">اتجاه التحويل</label>
+    <div class="switchline">
+      <select id="direction">
+        <option value="sar-lyd">ريال سعودي ← إلى دينار ليبي</option>
+        <option value="lyd-sar">دينار ليبي ← إلى ريال سعودي</option>
+      </select>
+      <button class="iconbtn" id="swapBtn" type="button" aria-label="تبديل اتجاه التحويل" title="تبديل الاتجاه">⇄</button>
+    </div>
+  </div>
+  <div class="field">
+    <label id="amountLabel" for="amount">المبلغ بالريال السعودي</label>
+    <input id="amount" type="text" inputmode="decimal" autocomplete="off" value="0" placeholder="مثال: 125,50">
+    <div class="helper">تقدر تكتب الفاصلة أو النقطة العشرية.</div>
+  </div>
+  <div class="quick" aria-label="مبالغ سريعة">
+    <button type="button" data-amount="10">10</button>
+    <button type="button" data-amount="50">50</button>
+    <button type="button" data-amount="100">100</button>
+    <button type="button" data-amount="500">500</button>
+    <button type="button" data-amount="1000">1000</button>
+    <button type="button" data-amount="0">تصفير</button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>نتيجة التحويل</h2>
+  <div class="resultbox" aria-live="polite" aria-atomic="true">
+    <div class="resultcaption" id="resultLabel">المبلغ بالدينار الليبي</div>
+    <div class="result" id="result">0.00 LYD</div>
+    <div class="rate" id="rateSummary">سعر الصرف: 1 SAR = 2.733333 LYD</div>
+  </div>
+  <div class="meta">
+    <div><span>المبلغ المُدخل</span><strong id="inputSummary">0.00 SAR</strong></div>
+    <div><span>سعر الدولار المستخدم</span><strong id="usdSummary">10.25 LYD</strong></div>
+  </div>
+  <div class="actions">
+    <button id="copyBtn" class="primary" type="button">نسخ النتيجة</button>
+    <button id="saveBtn" class="secondary" type="button">حفظ في السجل</button>
+    <button id="resetBtn" class="neutral" type="button">إعادة ضبط المبلغ</button>
+    <button id="clearBtn" class="neutral" type="button">مسح المدخلات</button>
+  </div>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+</section>
+
+<section class="card">
+  <div class="history-head">
+    <h2>سجل التحويلات</h2>
+    <span class="count" id="historyCount">0 عمليات</span>
+  </div>
+  <div class="actions" style="margin:0 0 10px">
+    <button id="copyHistoryBtn" class="secondary" type="button">نسخ السجل</button>
+    <button id="clearHistoryBtn" class="danger" type="button">مسح السجل</button>
+  </div>
+  <div id="history"><div class="empty">ما فيش عمليات محفوظة توا.</div></div>
+</section>
+<footer>الحساب يعتمد على سعر الصرف المدخل. راجع السعر قبل اتخاذ أي قرار مالي.</footer>
+</main>
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const KEYS={rate:'sarLyd_rate_v3',settings:'sarLyd_settings_v3',history:'sarLyd_history_v3'};
+let history=read(KEYS.history,[]);
+let statusTimer=null;
+
+function read(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch(_){return fallback}}
+function parseNumber(raw){
+  let s=String(raw??'').trim().replace(/[\s\u00a0\u202f]/g,'').replace(/[٬]/g,'').replace(/[٫]/g,'.');
+  if(!s)return NaN;
+  // If comma and dot are both present, the last separator is treated as decimal.
+  const comma=s.lastIndexOf(','),dot=s.lastIndexOf('.');
+  if(comma>=0&&dot>=0){
+    const dec=comma>dot?',':'.';
+    s=dec===','?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'');
+  }else if(comma>=0){
+    // Single comma is decimal; repeated commas are treated as grouping except for the final separator.
+    const parts=s.split(',');
+    s=parts.length>2?parts.slice(0,-1).join('')+'.'+parts.at(-1):s.replace(',','.');
+  }else if((s.match(/\./g)||[]).length>1){
+    const parts=s.split('.');
+    s=parts.slice(0,-1).join('')+'.'+parts.at(-1);
+  }
+  if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(s))return NaN;
+  const n=Number(s);return Number.isFinite(n)?n:NaN;
+}
+function fmt(n,max=2){
+  if(!Number.isFinite(n))return '—';
+  return new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:max}).format(n);
+}
+function money(n,cur){return fmt(n)+' '+cur}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function info(){return $('direction').value==='sar-lyd'?{from:'SAR',to:'LYD',fromName:'الريال السعودي',toName:'الدينار الليبي'}:{from:'LYD',to:'SAR',fromName:'الدينار الليبي',toName:'الريال السعودي'}}
+function exchangeRate(dir,usd){return dir==='sar-lyd'?usd/3.75:3.75/usd}
+function setStatus(msg){
+  $('status').textContent=msg;clearTimeout(statusTimer);
+  statusTimer=setTimeout(()=>{$('status').textContent=''},3200);
+}
+function persistSettings(){
+  try{localStorage.setItem(KEYS.rate,String(parseNumber($('usdRate').value)));localStorage.setItem(KEYS.settings,JSON.stringify({direction:$('direction').value}))}catch(_){}
+}
+function calculate(showError=false){
+  const usd=parseNumber($('usdRate').value),amount=parseNumber($('amount').value),curr=info();
+  if(!Number.isFinite(usd)||usd<=0){if(showError)setStatus('اكتب سعر دولار أكبر من صفر.');return null}
+  if(!Number.isFinite(amount)||amount<0){if(showError)setStatus('اكتب مبلغًا صحيحًا باستخدام الفاصلة أو النقطة.');return null}
+  const rate=exchangeRate($('direction').value,usd),result=amount*rate;
+  if(!Number.isFinite(result)){if(showError)setStatus('القيمة كبيرة جدًا؛ تحقق من المبلغ.');return null}
+  const d={dir:$('direction').value,from:curr.from,to:curr.to,fromName:curr.fromName,toName:curr.toName,amount,usd,rate,result,date:new Date().toLocaleString('ar-LY')};
+  $('amountLabel').textContent='المبلغ بـ'+curr.fromName;
+  $('resultLabel').textContent='النتيجة بـ'+curr.toName;
+  $('result').textContent=money(result,curr.to);
+  $('rateSummary').textContent='1 '+curr.from+' = '+fmt(rate,6)+' '+curr.to;
+  $('inputSummary').textContent=money(amount,curr.from);
+  $('usdSummary').textContent=money(usd,'LYD');
+  return d;
+}
+function saveHistory(){
+  try{localStorage.setItem(KEYS.history,JSON.stringify(history.slice(0,50)))}catch(_){setStatus('تعذّر حفظ السجل في هذا المتصفح.')}
+}
+function renderHistory(){
+  $('historyCount').textContent=history.length+' عمليات';
+  if(!history.length){$('history').innerHTML='<div class="empty">ما فيش عمليات محفوظة توا.</div>';return}
+  $('history').innerHTML=history.map((h,i)=>`
+    <article class="history-item">
+      <div class="hrow">
+        <div><strong>${esc(fmt(h.amount))} ${esc(h.from)} → ${esc(fmt(h.result))} ${esc(h.to)}</strong><div class="hdate">${esc(h.date||'')} · الدولار ${esc(fmt(h.usd))} د.ل</div></div>
+      </div>
+      <div class="hactions"><button type="button" class="secondary" data-reuse="${i}">استخدام العملية</button><button type="button" class="neutral" data-delete="${i}">حذف</button></div>
+    </article>`).join('');
+}
+function saveCurrent(){
+  const d=calculate(true);if(!d)return;
+  history.unshift(d);history=history.slice(0,50);saveHistory();renderHistory();setStatus('تم حفظ العملية في السجل.');
+}
+async function copyText(text){
+  try{
+    if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);
+    else{
+      const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+      const ok=document.execCommand('copy');ta.remove();if(!ok)throw Error('copy');
+    }
+    setStatus('تم نسخ النص بنجاح.');
+  }catch(_){setStatus('تعذّر النسخ التلقائي. حاول مرة ثانية.')}
+}
+function restore(){
+  try{
+    const r=localStorage.getItem(KEYS.rate);if(r&&Number.isFinite(parseNumber(r))&&parseNumber(r)>0)$('usdRate').value=r;
+    const s=read(KEYS.settings,null);if(s&&['sar-lyd','lyd-sar'].includes(s.direction))$('direction').value=s.direction;
+  }catch(_){}
+}
+$('usdRate').addEventListener('input',()=>{persistSettings();calculate()});
+$('usdRate').addEventListener('change',()=>{persistSettings();calculate(true)});
+$('amount').addEventListener('input',()=>calculate());
+$('direction').addEventListener('change',()=>{persistSettings();calculate()});
+$('swapBtn').addEventListener('click',()=>{
+  const old=calculate();
+  if(old)$('amount').value=String(old.result);
+  $('direction').value=$('direction').value==='sar-lyd'?'lyd-sar':'sar-lyd';
+  persistSettings();calculate();setStatus('تم تبديل اتجاه التحويل.');
+});
+document.querySelectorAll('[data-amount]').forEach(b=>b.addEventListener('click',()=>{$('amount').value=b.dataset.amount;calculate()}));
+$('copyBtn').addEventListener('click',()=>{
+  const d=calculate(true);if(!d)return;
+  copyText('حاسبة الريال والدينار\nالمبلغ: '+fmt(d.amount)+' '+d.from+'\nالنتيجة: '+fmt(d.result)+' '+d.to+'\nسعر الدولار: '+fmt(d.usd)+' د.ل\n1 دولار = 3.75 ريال سعودي');
+});
+$('saveBtn').addEventListener('click',saveCurrent);
+$('resetBtn').addEventListener('click',()=>{$('amount').value='0';calculate();setStatus('تم تصفير المبلغ والنتيجة.')});
+$('clearBtn').addEventListener('click',()=>{$('amount').value='0';$('usdRate').value='10.25';persistSettings();calculate();setStatus('تمت إعادة المدخلات للقيم الافتراضية.')});
+$('copyHistoryBtn').addEventListener('click',()=>{
+  if(!history.length){setStatus('السجل فارغ.');return}
+  copyText(history.map((h,i)=>(i+1)+'. '+fmt(h.amount)+' '+h.from+' → '+fmt(h.result)+' '+h.to+' | الدولار '+fmt(h.usd)+' د.ل | '+(h.date||'')).join('\n'));
+});
+$('clearHistoryBtn').addEventListener('click',()=>{
+  if(!history.length){setStatus('السجل فارغ أصلًا.');return}
+  if(confirm('متأكد تبي تمسح سجل التحويلات كله؟')){history=[];saveHistory();renderHistory();setStatus('تم مسح السجل.')}
+});
+$('history').addEventListener('click',e=>{
+  const r=e.target.closest('[data-reuse]'),del=e.target.closest('[data-delete]');
+  if(r){
+    const h=history[Number(r.dataset.reuse)];if(!h)return;
+    $('direction').value=h.dir;$('amount').value=String(h.amount);$('usdRate').value=String(h.usd);persistSettings();calculate();window.scrollTo({top:0,behavior:'smooth'});setStatus('تم تحميل العملية.');
+  }
+  if(del){const i=Number(del.dataset.delete);if(Number.isInteger(i)&&i>=0&&i<history.length){history.splice(i,1);saveHistory();renderHistory();setStatus('تم حذف العملية.')}}
+});
+restore();renderHistory();calculate();
+})();
+</script>
+</body>
+</html>
